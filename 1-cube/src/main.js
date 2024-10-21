@@ -28,5 +28,8 @@ function init() {
   // camera.position.z = 5;
   camera.position.set(1, 2, 5);
 
+  //lookAt을 넣어주면 항상 해당 오브젝트가 중심으로 보이게 된다.
+  camera.lookAt(cube.position);
+
   renderer.render(scene, camera);
 }
