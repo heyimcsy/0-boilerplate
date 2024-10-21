@@ -24,7 +24,15 @@ function init() {
    *  MeshBasicMaterial은 조명에 영향을 받지 않는다. 조명이 없어도 가시적으로 확인이 가능
    *  MeshStandardMaterial은 조명에 영향을 받는다.
    */
-  const material = new THREE.MeshStandardMaterial({ color: 0xcc99ff });
+  const material = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(0xcc99ff),
+    transparent: true,
+    opacity: 0.5,
+    // visible: false,
+    // wireframe: true,
+    //side : THREE.FrontSide, THREE.BackSide, THREE.DoubleSide
+    // side: THREE.DoubleSide,
+  });
 
   const cube = new THREE.Mesh(geometry, material);
 
