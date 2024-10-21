@@ -20,7 +20,11 @@ function init() {
   //박스모양의 지오메트리 인자 순서대로 각각 높이 너비 깊이
   const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-  const material = new THREE.MeshBasicMaterial({ color: 0xcc99ff });
+  /**
+   *  MeshBasicMaterial은 조명에 영향을 받지 않는다. 조명이 없어도 가시적으로 확인이 가능
+   *  MeshStandardMaterial은 조명에 영향을 받는다.
+   */
+  const material = new THREE.MeshStandardMaterial({ color: 0xcc99ff });
 
   const cube = new THREE.Mesh(geometry, material);
 
@@ -31,6 +35,11 @@ function init() {
 
   //lookAt을 넣어주면 항상 해당 오브젝트가 중심으로 보이게 된다.
   camera.lookAt(cube.position);
+
+  //인자 순서 조명의 색, 강도 조절
+  const directionalLight = new THREE.DirectionalLight(0xf0f0f0, 1);
+  directionalLight.position.set(-1, 2, 3);
+  scene.add(directionalLight);
 
   renderer.render(scene, camera);
 }
