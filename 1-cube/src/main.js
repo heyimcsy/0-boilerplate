@@ -49,5 +49,17 @@ function init() {
   directionalLight.position.set(-1, 2, 3);
   scene.add(directionalLight);
 
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+  scene.add(ambientLight);
+
   renderer.render(scene, camera);
+
+  function handleResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', handleResize);
 }
