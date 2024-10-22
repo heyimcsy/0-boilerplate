@@ -26,8 +26,8 @@ function init() {
    */
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color(0xcc99ff),
-    transparent: true,
-    opacity: 0.5,
+    // transparent: true,
+    // opacity: 0.5,
     // visible: false,
     // wireframe: true,
     //side : THREE.FrontSide, THREE.BackSide, THREE.DoubleSide
@@ -51,9 +51,15 @@ function init() {
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
   scene.add(ambientLight);
-
-  renderer.render(scene, camera);
-
+  render();
+  //재귀적으로 함수를 실행시켜 돌아가는 애니메이션 만든다.
+  function render() {
+    //각도의 기준은 radian
+    // cube.rotation.x = THREE.MathUtils.degToRad(45);
+    cube.rotation.x += 0.01;
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
   function handleResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
