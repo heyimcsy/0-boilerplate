@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 window.addEventListener('load', function () {
   init();
@@ -17,6 +18,22 @@ function init() {
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
 
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.autoRotate = true;
+  // controls.autoRotateSpeed = 30;
+  controls.enableDamping = true;
+  // controls.dampingFactor = 0.01;
+  controls.enableZoom = true;
+  controls.enablePan = true;
+  controls.maxDistance = 50;
+  controls.minDistance = 10;
+  // controls.maxPolarAngle = Math.PI / 2;
+  // controls.minPolarAngle = Math.PI / 3;
+  controls.maxAzimuthAngle = Math.PI / 2;
+  controls.minAzimuthAngle = Math.PI / 3;
+
+  const axisHelper = new THREE.AxesHelper(5);
+  scene.add(axisHelper);
   //박스모양의 지오메트리 인자 순서대로 각각 높이 너비 깊이
   const cubeGeometry = new THREE.IcosahedronGeometry(1);
 
@@ -53,17 +70,17 @@ function init() {
   render();
   //재귀적으로 함수를 실행시켜 돌아가는 애니메이션 만든다.
   function render() {
-    const elapsedTime = clock.getElapsedTime();
+    // const elapsedTime = clock.getElapsedTime();
 
-    cube.rotation.x = elapsedTime;
-    cube.rotation.y = elapsedTime;
+    // cube.rotation.x = elapsedTime;
+    // cube.rotation.y = elapsedTime;
 
-    skeleton.rotation.x = elapsedTime * 1.5;
-    skeleton.rotation.y = elapsedTime * 1.5;
+    // skeleton.rotation.x = elapsedTime * 1.5;
+    // skeleton.rotation.y = elapsedTime * 1.5;
 
-    // cube.rotation.y = Math.sin(cube.rotation.x);
-    // cube.scale.x = Math.cos(cube.rotation.x);
     renderer.render(scene, camera);
+
+    controls.update();
 
     //주의점 유저가 보는 환경에 따라 애니메이션의 재생 속도가 달라질 수 있다
     //그래서 Date.now() 를 사용해서 보정을 해준다. 동일한 시간에 동일한 장면을 보여주는 것
@@ -74,6 +91,7 @@ function init() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.render(scene, camera);
+    controls.update();
   }
 
   window.addEventListener('resize', handleResize);
