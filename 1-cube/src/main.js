@@ -1,11 +1,18 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import GUI from 'lil-gui';
 
 window.addEventListener('load', function () {
   init();
 });
 
 function init() {
+  const options = {
+    color: 0x00ffff,
+  };
+  const emissiveOptions = {
+    color: 0x11111,
+  };
   const renderer = new THREE.WebGLRenderer({
     // alpha: true,
     antialias: true,
@@ -29,8 +36,8 @@ function init() {
   controls.minDistance = 10;
   // controls.maxPolarAngle = Math.PI / 2;
   // controls.minPolarAngle = Math.PI / 3;
-  controls.maxAzimuthAngle = Math.PI / 2;
-  controls.minAzimuthAngle = Math.PI / 3;
+  // controls.maxAzimuthAngle = Math.PI / 2;
+  // controls.minAzimuthAngle = Math.PI / 3;
 
   const axisHelper = new THREE.AxesHelper(5);
   scene.add(axisHelper);
@@ -95,4 +102,20 @@ function init() {
   }
 
   window.addEventListener('resize', handleResize);
+
+  const gui = new GUI();
+
+  // gui.add(cube.position, 'y', -3, 3, 0.1);
+  // gui.add(cube.position, 'x', -3, 3);
+
+  gui.add(cube.position, 'y').min(-3).max(3).step(0.1);
+  gui.add(cube, 'visible');
+  //color 지정은 따로 addcolor 로 명시해줘야 한다.
+  gui.addColor(options, 'color').onChange((value) => {
+    cube.material.color.set(value);
+    cube.material.emissive.set(value);
+  });
+  gui.addColor(emissiveOptions, 'color').onChange((value) => {
+    cube.material.emissive.set(value);
+  });
 }
