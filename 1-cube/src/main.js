@@ -51,13 +51,28 @@ function init() {
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
   scene.add(ambientLight);
+
+  const clock = new THREE.Clock();
   render();
   //재귀적으로 함수를 실행시켜 돌아가는 애니메이션 만든다.
   function render() {
     //각도의 기준은 radian
     // cube.rotation.x = THREE.MathUtils.degToRad(45);
-    cube.rotation.x += 0.01;
+    // cube.rotation.x += 0.01;
+
+    //Date.now 만 넣어줄 시 ms 단위로 값이 변화해서 겁나 도는 큐브가 나온다.
+    // cube.rotation.x = Date.now() / 1000;
+
+    //THREE.js 내장 함수
+    // cube.rotation.x = clock.getElapsedTime();
+    cube.rotation.x += clock.getDelta();
+
+    // cube.rotation.y = Math.sin(cube.rotation.x);
+    // cube.scale.x = Math.cos(cube.rotation.x);
     renderer.render(scene, camera);
+
+    //주의점 유저가 보는 환경에 따라 애니메이션의 재생 속도가 달라질 수 있다
+    //그래서 Date.now() 를 사용해서 보정을 해준다. 동일한 시간에 동일한 장면을 보여주는 것
     requestAnimationFrame(render);
   }
   function handleResize() {
