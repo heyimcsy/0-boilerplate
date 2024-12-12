@@ -82,7 +82,7 @@ async function init() {
   scene.add(ambientLight);
 
   /** Spot Light */
-  const spotLight = new THREE.SpotLight(0xffffff, 50, 30, Math.PI*0.15, 0.2, 0.5 )
+  const spotLight = new THREE.SpotLight(0xffffff, 30, 30, Math.PI*0.15, 0.2, 0.5 )
   // 빛의 색상, 빛의 강도 , 빛이 닿는 거리 , 퍼지는 각도, 감소하는 정도, 거리에  따라 어두워지는 양
 
   spotLight.castShadow = true;
@@ -92,6 +92,10 @@ async function init() {
 
   spotLight.position.set(0,0,3);
   spotLight.target.position.set(0,0,-3);
+
+  const spotLightTexture = textureLoader.load('gradient.jpeg');
+
+  spotLight.map = spotLightTexture;
 
   scene.add(spotLight, spotLight.target);
 
