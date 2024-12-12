@@ -45,7 +45,7 @@ async function init() {
     bevelThickness: 0.02
   });
 
-  const textMaterial = new THREE.MeshPhongMaterial({color: 0x00c896});
+  const textMaterial = new THREE.MeshPhongMaterial();
   const text =new THREE.Mesh(textGeometry, textMaterial);
 
   //text material을 화면의 중간에 오게 하는 방법은 두가지가 있다. bounding box 계산해서 translate 하는 것과 center함수를 이용하는 것 이다.
@@ -60,6 +60,14 @@ async function init() {
   // )
 
   textGeometry.center()
+
+  /** Texture */
+  // const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new THREE.TextureLoader().setPath('./assets/textures/');
+
+  const textTexture = textureLoader.load('holographic.jpeg')
+
+  textMaterial.map =  textTexture
   scene.add(text);
 //인자 첫번째 가져올 폰트 경로, 두번째 콜백함수 , 세번째 onProgress , 네번째 onError 시 사용할 함수
 
