@@ -10,7 +10,7 @@ window.addEventListener('load', function () {
   init();
 });
 
-function init() {
+async function init() {
   const gui = new GUI();
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -32,20 +32,17 @@ function init() {
   const fontLoader = new FontLoader()
 //두가지 방법으로 가져올 수 있다. load 함수와 parse 함수
 
-  fontLoader.load('./assets/fonts/The Jamsil 3 Regular_Regular.json',
-    font => {
+  const font = await fontLoader.loadAsync('./assets/fonts/The Jamsil 3 Regular_Regular.json')
 
-      const textGeometry = new TextGeometry('안녕, 친구들',{
-        font,
-        size: 0.5,
-        height: 0.1
-      });
+  const textGeometry = new TextGeometry('안녕, 친구들',{
+    font,
+    size: 0.5,
+    height: 0.1
+  });
 
-      const textMaterial = new THREE.MeshPhongMaterial({color: 0x00c896});
-      const text =new THREE.Mesh(textGeometry, textMaterial);
-      scene.add(text);
-    }
-  );
+  const textMaterial = new THREE.MeshPhongMaterial({color: 0x00c896});
+  const text =new THREE.Mesh(textGeometry, textMaterial);
+  scene.add(text);
 //인자 첫번째 가져올 폰트 경로, 두번째 콜백함수 , 세번째 onProgress , 네번째 onError 시 사용할 함수
 
   // const font =  fontLoader.parse(typeface)
