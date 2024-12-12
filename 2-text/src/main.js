@@ -24,7 +24,7 @@ async function init() {
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
 
-  camera.position.z = 5;
+  camera.position.set(0,1,5);
 
   new OrbitControls(camera, renderer.domElement);
 
@@ -35,7 +35,7 @@ async function init() {
   const font = await fontLoader.loadAsync('./assets/fonts/The Jamsil 3 Regular_Regular.json');
 
   //bavel: 날카로운 text에 경사면을 줘 윤곽을 부드럽게 만든다
-  const textGeometry = new TextGeometry('안녕, 친구들.',{
+  const textGeometry = new TextGeometry('Three.js Interactive Web.',{
     font,
     size: 0.5,
     height: 0.1,
@@ -73,23 +73,79 @@ async function init() {
 
   // const font =  fontLoader.parse(typeface)
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
   scene.add(ambientLight);
 
-  /** Pont Light */
-  const pointLight = new THREE.PointLight(0xffffff, 0.8);
-  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.5);
+  /** Spot Light */
+  const spotLight = new THREE.SpotLight(0xffffff, 50, 30, Math.PI*0.15, 0.2, 0.5 )
+  // 빛의 색상, 빛의 강도 , 빛이 닿는 거리 , 퍼지는 각도, 감소하는 정도, 거리에  따라 어두워지는 양
 
-  pointLight.position.set(3,0,2);
-  // scene.add(pointLight, pointLightHelper);
-  scene.add(pointLight);
+  spotLight.position.set(0,0,3)
+  spotLight.target.position.set(0,0,-3);
 
-  gui.add(pointLight.position, 'x').min(-3).max(3).step(0.1)
+  -
+  scene.add(spotLight, spotLight.target)
 
+  /** Plane Geometry */
+  const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+  const planeMaterial = new THREE.MeshPhongMaterial({color: 0x000000})
+
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.position.z = -10;
+  scene.add(plane)
+
+  // /** Pont Light */
+  // const pointLight = new THREE.PointLight(0xffffff, 0.8);
+  // // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.5);
+  //
+  // pointLight.position.set(3,0,2);
+  // // scene.add(pointLight, pointLightHelper);
+  // scene.add(pointLight);
+  //
+  // gui.add(pointLight.position, 'x').min(-3).max(3).step(0.1)
+
+  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+
+  const spotLightFolder = gui.addFolder('SpotLight');
+  spotLightFolder
+    .add(spotLight, 'angle')
+    .min(0)
+    .max(Math.PI /2)
+    .step(0.01);
+
+  spotLightFolder
+    .add(spotLight.position, 'z')
+    .min(1)
+    .max(10)
+    .step(0.01)
+    .name('position.z');
+
+  spotLightFolder
+    .add(spotLight, 'distance')
+    .min(1)
+    .max(40)
+    .step(0.01);
+
+  spotLightFolder
+    .add(spotLight, 'decay')
+    .min(0)
+    .max(10)
+    .step(0.01);
+
+  spotLightFolder
+    .add(spotLight, 'penumbra')
+    .min(0)
+    .max(1)
+    .step(0.01);
+
+
+  scene.add(spotLightHelper)
   render();
 
   function render() {
     renderer.render(scene, camera);
+
+    spotLightHelper.update();
 
     requestAnimationFrame(render);
   }
