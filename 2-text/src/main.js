@@ -16,6 +16,9 @@ async function init() {
     antialias: true,
   });
 
+  //그림자 사용 허용하는 코드
+  renderer.shadowMap.enabled = true;
+
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.domElement);
@@ -47,6 +50,8 @@ async function init() {
 
   const textMaterial = new THREE.MeshPhongMaterial();
   const text =new THREE.Mesh(textGeometry, textMaterial);
+
+  text.castShadow = true;
 
   //text material을 화면의 중간에 오게 하는 방법은 두가지가 있다. bounding box 계산해서 translate 하는 것과 center함수를 이용하는 것 이다.
   //bounding box 의 크기를 계산하는 computeBoundingBox를 먼저 실행을 해야 boundingBox의 값을 알 수 있다.
@@ -80,9 +85,13 @@ async function init() {
   const spotLight = new THREE.SpotLight(0xffffff, 50, 30, Math.PI*0.15, 0.2, 0.5 )
   // 빛의 색상, 빛의 강도 , 빛이 닿는 거리 , 퍼지는 각도, 감소하는 정도, 거리에  따라 어두워지는 양
 
-  spotLight.position.set(0,0,3)
-  spotLight.target.position.set(0,0,-3);
+  spotLight.castShadow = true;
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+  spotLight.shadow.radius = 10;
 
+  spotLight.position.set(0,0,3);
+  spotLight.target.position.set(0,0,-3);
 
   scene.add(spotLight, spotLight.target);
 
@@ -95,11 +104,13 @@ async function init() {
 
   /** Plane Geometry */
   const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
-  const planeMaterial = new THREE.MeshPhongMaterial({color: 0x000000})
+  const planeMaterial = new THREE.MeshPhongMaterial({color: 0x000000});
 
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
   plane.position.z = -10;
-  scene.add(plane)
+  plane.receiveShadow = true;
+
+  scene.add(plane);
 
   // /** Pont Light */
   // const pointLight = new THREE.PointLight(0xffffff, 0.8);
@@ -148,6 +159,14 @@ async function init() {
     .min(0)
     .max(1)
     .step(0.01);
+
+  spotLightFolder
+    .add(spotLight.shadow, 'radius')
+    .min(0)
+    .max(10)
+    .step(0.01)
+    .name('shadow.radius');
+
   render();
 
   function render() {
