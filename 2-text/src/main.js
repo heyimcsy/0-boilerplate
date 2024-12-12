@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
 import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer'
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass'
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 // 내가 원하는 폰트를 사용하고 싶으면 헤당 폰트를  facetype 사이트에서 변환을 해주어야 한다.
 // import typeface from './assets/fonts/The Jamsil 3 Regular_Regular.json'
 import GUI from 'lil-gui'
@@ -78,11 +81,11 @@ async function init() {
 
   // const font =  fontLoader.parse(typeface)
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
   scene.add(ambientLight);
 
   /** Spot Light */
-  const spotLight = new THREE.SpotLight(0xffffff, 30, 30, Math.PI*0.15, 0.2, 0.5 )
+  const spotLight = new THREE.SpotLight(0xffffff, 50, 30, Math.PI*0.15, 0.2, 0.5 )
   // 빛의 색상, 빛의 강도 , 빛이 닿는 거리 , 퍼지는 각도, 감소하는 정도, 거리에  따라 어두워지는 양
 
   spotLight.castShadow = true;
@@ -171,10 +174,42 @@ async function init() {
     .step(0.01)
     .name('shadow.radius');
 
+  /**  Effects */
+  const composer = new EffectComposer(renderer);
+
+  const renderPass = new RenderPass(scene, camera);
+
+  composer.addPass(renderPass);
+
+  const unrealBloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth,  window.innerHeight), 1.2, 1, 0);
+
+  composer.addPass(unrealBloomPass);
+
+  const unrealBluePassFolder = gui.addFolder('UnrealBloomPass');
+
+  unrealBluePassFolder
+    .add(unrealBloomPass, 'strength')
+    .min(0)
+    .max(3)
+    .step(0.01);
+
+  unrealBluePassFolder
+    .add(unrealBloomPass, 'radius')
+    .min(0)
+    .max(1)
+    .step(0.01);
+
+  unrealBluePassFolder
+    .add(unrealBloomPass, 'threshold')
+    .min(0)
+    .max(1)
+    .step(0.01);
+
   render();
 
   function render() {
-    renderer.render(scene, camera);
+    // renderer.render(scene, camera);
+    composer.render();
     // spotLightHelper.update();
 
     requestAnimationFrame(render);
