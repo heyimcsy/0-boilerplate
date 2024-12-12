@@ -29,12 +29,12 @@ async function init() {
   new OrbitControls(camera, renderer.domElement);
 
   /** Font */
-  const fontLoader = new FontLoader()
+  const fontLoader = new FontLoader();
 //두가지 방법으로 가져올 수 있다. load 함수와 parse 함수
 
-  const font = await fontLoader.loadAsync('./assets/fonts/The Jamsil 3 Regular_Regular.json')
+  const font = await fontLoader.loadAsync('./assets/fonts/The Jamsil 3 Regular_Regular.json');
 
-  const textGeometry = new TextGeometry('안녕, 친구들',{
+  const textGeometry = new TextGeometry('안녕, 친구들.',{
     font,
     size: 0.5,
     height: 0.1
@@ -42,6 +42,19 @@ async function init() {
 
   const textMaterial = new THREE.MeshPhongMaterial({color: 0x00c896});
   const text =new THREE.Mesh(textGeometry, textMaterial);
+
+  //text material을 화면의 중간에 오게 하는 방법은 두가지가 있다. bounding box 계산해서 translate 하는 것과 center함수를 이용하는 것 이다.
+  //bounding box 의 크기를 계산하는 computeBoundingBox를 먼저 실행을 해야 boundingBox의 값을 알 수 있다.
+  // textGeometry.computeBoundingBox();
+  // console.log('textGeometry', textGeometry.boundingBox);
+
+  // textGeometry.translate(
+  //   - (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x)*0.5,
+  //   - (textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y)*0.5,
+  //   - (textGeometry.boundingBox.max.z - textGeometry.boundingBox.min.z)*0.5,
+  // )
+
+  textGeometry.center()
   scene.add(text);
 //인자 첫번째 가져올 폰트 경로, 두번째 콜백함수 , 세번째 onProgress , 네번째 onError 시 사용할 함수
 
