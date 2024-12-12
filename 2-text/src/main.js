@@ -83,8 +83,15 @@ async function init() {
   spotLight.position.set(0,0,3)
   spotLight.target.position.set(0,0,-3);
 
-  -
-  scene.add(spotLight, spotLight.target)
+
+  scene.add(spotLight, spotLight.target);
+
+  window.addEventListener('mousemove' , event => {
+    //절대 값으로 값이 와서 window 창에 대한 상대값을 넣어줘야 한다.
+    const x = ((event.clientX / window.innerWidth) - 0.5)*5;
+    const y = -((event.clientY / window.innerHeight) - 0.5)*5;
+    spotLight.target.position.set(x,y,-3)
+  })
 
   /** Plane Geometry */
   const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
@@ -104,9 +111,12 @@ async function init() {
   //
   // gui.add(pointLight.position, 'x').min(-3).max(3).step(0.1)
 
-  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  // const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  //
+  // scene.add(spotLightHelper);
 
   const spotLightFolder = gui.addFolder('SpotLight');
+
   spotLightFolder
     .add(spotLight, 'angle')
     .min(0)
@@ -132,20 +142,17 @@ async function init() {
     .max(10)
     .step(0.01);
 
+
   spotLightFolder
     .add(spotLight, 'penumbra')
     .min(0)
     .max(1)
     .step(0.01);
-
-
-  scene.add(spotLightHelper)
   render();
 
   function render() {
     renderer.render(scene, camera);
-
-    spotLightHelper.update();
+    // spotLightHelper.update();
 
     requestAnimationFrame(render);
   }
