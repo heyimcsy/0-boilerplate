@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import Card from './Card.js';
 
 window.addEventListener('load', function () {
@@ -27,6 +28,8 @@ function init() {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
 
   camera.position.z = 25;
+
+  const controls = new OrbitControls(camera, renderer.domElement);
 
   const card = new Card({
     width: 10,
