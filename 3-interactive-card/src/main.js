@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {GUI} from 'lil-gui';
+import {gsap} from 'gsap'
 import Card from './Card.js';
 
 
@@ -53,7 +54,10 @@ function init() {
 
   card.mesh.rotation.z = Math.PI *0.1;
 
-  scene.add( card.mesh);
+  scene.add(card.mesh);
+
+  //화면을 더 부드럽게 말들 수 있다.
+  gsap.to(card.mesh.rotation, {y: -Math.PI * 4, duration:2.5, ease: 'back.out(2.5)'});
 
   const cardFolder = gui.addFolder('Card');
 
@@ -114,6 +118,7 @@ function init() {
 
     button.addEventListener('click',() => {
       card.mesh.material.color = new THREE.Color(color)
+      gsap.to(card.mesh.rotation, {y: card.mesh.rotation.y-Math.PI / 2, duration:1, ease: 'back.out(2.5)'});
     })
 
     container.appendChild(button);
