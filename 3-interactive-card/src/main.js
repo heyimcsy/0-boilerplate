@@ -7,8 +7,10 @@ window.addEventListener('load', function () {
 function init() {
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
+    alpha: true
   });
 
+  renderer.setClearAlpha(0)
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.domElement);
