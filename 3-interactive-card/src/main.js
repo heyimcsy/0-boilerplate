@@ -10,6 +10,8 @@ window.addEventListener('load', function () {
 
 function init() {
   const gui = new GUI();
+
+  const COLORS = ['#ff6e6e', '#40f576','#fff86e','#6efffa']
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -34,12 +36,22 @@ function init() {
 
   const controls = new OrbitControls(camera, renderer.domElement);
 
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 2.5;
+  controls.rotateSpeed = 0.75;
+  controls.enableDamping = true;
+  controls.enableZoom = false;
+  controls.minPolarAngle = Math.PI / 2 - Math.PI / 3;
+  controls.maxPolarAngle = Math.PI / 2 + Math.PI / 3;
+
   const card = new Card({
     width: 10,
     height:15.8,
     radius:0.5,
-    color: '#0077ff'
+    color: COLORS[0]
     });
+
+  card.mesh.rotation.z = Math.PI *0.1;
 
   scene.add( card.mesh);
 
@@ -75,6 +87,8 @@ function init() {
   render();
 
   function render() {
+    controls.update();
+
     renderer.render(scene, camera);
 
     requestAnimationFrame(render);
@@ -90,4 +104,18 @@ function init() {
   }
 
   window.addEventListener('resize', handleResize);
+
+  const container = document.querySelector('.container');
+
+  COLORS.forEach(color => {
+    const button = document.createElement('button');
+
+    button.style.backgroundColor = color;
+
+    button.addEventListener('click',() => {
+      card.mesh.material.color = new THREE.Color(color)
+    })
+
+    container.appendChild(button);
+  })
 }
