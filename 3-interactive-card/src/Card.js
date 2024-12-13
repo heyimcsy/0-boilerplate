@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class Card {
-  constructor ({width, height,radius,  color}) {
+  constructor ({width, height,radius, color}) {
     const x = width / 2 -radius;
     const y = height / 2 -radius;
 
@@ -16,7 +16,10 @@ class Card {
       .lineTo(-(x + radius), y , radius, Math.PI, Math.PI / 2, true )
       .absarc(-x , y, radius, Math.PI, Math.PI/2, true);
 
-    const geometry = new THREE.ShapeGeometry(shape)
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth: 0.01,
+      bevelThickness: 0.1,
+    })
     const material = new THREE.MeshStandardMaterial({
       color,
       side: THREE.DoubleSide,
