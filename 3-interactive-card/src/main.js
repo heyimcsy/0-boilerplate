@@ -58,12 +58,12 @@ function init() {
     .step(0.01)
     .name('material.metalness')
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   ambientLight.position.set(-5, -5, -5);
 
   scene.add(ambientLight);
 
-  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.6);
+  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
   const directionalLight2 = directionalLight1.clone();
 
   directionalLight1.position.set(1,1,3);
