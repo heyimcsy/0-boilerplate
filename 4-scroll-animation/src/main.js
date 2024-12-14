@@ -51,16 +51,22 @@ function init() {
   //   waveGeometry.attributes.position.array[i + 2] += (Math.random() - 0.5) * waveHeight;
   // }
 
+  const initialZPositions = [];
+
   for (let i = 0; i< waveGeometry.attributes.position.count; i ++){
     const z = waveGeometry.attributes.position.getZ(i) +  (Math.random() - 0.5) * waveHeight;
-    waveGeometry.attributes.position.setZ(i,z);
+
+    waveGeometry.attributes.position.setZ(i, z);
+    initialZPositions.push(z);
   }
 
   wave.update = function (){
     const elapsedTime = clock.getElapsedTime();
 
-    for(let i = 0; i < waveGeometry.attributes.position.array.length; i +=3){
-      waveGeometry.attributes.position.array[i+2] += elapsedTime * 0.01;
+    for(let i = 0; i < waveGeometry.attributes.position.count; i ++){
+      const z = initialZPositions[i] +  Math.sin(elapsedTime * 3 + i ** 2) * waveHeight;
+      waveGeometry.attributes.position.setZ(i, z);
+
     }
 
     waveGeometry.attributes.position.needsUpdate = true;
