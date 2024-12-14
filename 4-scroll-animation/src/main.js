@@ -15,6 +15,7 @@ window.addEventListener('load', function () {
     canvas ,
   });
 
+  renderer.shadowMap.enabled = true;
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -45,6 +46,7 @@ window.addEventListener('load', function () {
 
   const wave = new THREE.Mesh(waveGeometry,  waveMaterial);
   wave.rotation.x = -Math.PI / 2;
+  wave.receiveShadow =  true;
 
   const waveHeight = 2.5;
 
@@ -82,6 +84,12 @@ window.addEventListener('load', function () {
 
   ship.scale.set(40,40,40);
   ship.rotation.y = Math.PI;
+  ship.castShadow = true;
+  ship.traverse(object => {
+    if(object.isMesh){
+      object.castShadow = true;
+    }
+  });
 
   ship.update = function (){
     const elapsedTime = clock.getElapsedTime();
@@ -91,13 +99,22 @@ window.addEventListener('load', function () {
 
   scene.add(ship);
 
-  const pointLight = new THREE.PointLight(0xffffff, 4000);
+  const pointLight = new THREE.PointLight(0xffffff, 3000);
+
+  pointLight.castShadow = true;
+  pointLight.shadow.mapSize.width = 1024;
+  pointLight.shadow.mapSize.height = 1024;
+  pointLight.shadow.radius = 10;
   pointLight.position.set(15,15,15);
 
   scene.add(pointLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 
+   directionalLight.castShadow = true;
+   directionalLight.shadow.mapSize.width = 1024;
+   directionalLight.shadow.mapSize.height = 1024;
+   directionalLight.shadow.radius = 10;
   directionalLight.position.set(-15, 15, 15);
 
   scene.add(directionalLight);
