@@ -1,11 +1,12 @@
 import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import {GUI} from 'lil-gui';
 
 window.addEventListener('load', function () {
   init();
 });
 
-function init() {
+ async  function init() {
   const gui = new GUI()
   const canvas = document.querySelector('#canvas');
   const renderer = new THREE.WebGLRenderer({
@@ -73,6 +74,23 @@ function init() {
   }
   scene.add(wave);
 
+  const gltfLoader = new GLTFLoader();
+
+  const gltf = await gltfLoader.loadAsync('./models/ship/scene.gltf');
+
+  const ship = gltf.scene;
+
+  ship.scale.set(40,40,40);
+  ship.rotation.y = Math.PI;
+
+  ship.update = function (){
+    const elapsedTime = clock.getElapsedTime();
+
+    ship.position.y = Math.sin(elapsedTime * 3);
+  }
+
+  scene.add(ship);
+
   const pointLight = new THREE.PointLight(0xffffff, 4000);
   pointLight.position.set(15,15,15);
 
@@ -90,6 +108,9 @@ function init() {
 
   function render() {
     wave.update();
+    ship.update();
+
+    camera.lookAt(ship.position);
 
     renderer.render(scene, camera);
 
