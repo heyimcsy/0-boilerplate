@@ -24,16 +24,25 @@ function init() {
 
   const waveGeometry = new THREE.PlaneGeometry(1500, 1500, 150, 150);
   const waveMaterial = new THREE.MeshStandardMaterial({
-    color: '#00ffff',
-    wireframe: true
+    color: '#00ffff'
   });
 
   const wave = new THREE.Mesh(waveGeometry,  waveMaterial);
   wave.rotation.x = -Math.PI / 2;
 
+  const waveHeight = 2.5;
+
+  // for (let i = 0; i< waveGeometry.attributes.position.array.length; i += 3){
+  //   waveGeometry.attributes.position.array[i + 2] += (Math.random() - 0.5) * waveHeight;
+  // }
+
+  for (let i = 0; i< waveGeometry.attributes.position.count; i ++){
+    const z = waveGeometry.attributes.position.getZ(i) +  (Math.random() - 0.5) * waveHeight;
+    waveGeometry.attributes.position.setZ(i,z);
+  }
   scene.add(wave);
 
-  const pointLight = new THREE.PointLight(0xffffff, 800);
+  const pointLight = new THREE.PointLight(0xffffff, 4000);
   pointLight.position.set(15,15,15);
 
   scene.add(pointLight);
