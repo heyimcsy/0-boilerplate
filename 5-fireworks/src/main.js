@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 // import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import Firework from './Firework.js';
+import firework from './Firework.js';
 
 window.addEventListener('load', function () {
   init();
@@ -68,16 +69,26 @@ function init() {
   //
   // scene.add(points);
 
+  const fireworks = [];
+
+  fireworks.update = function (){
+    for(let i = 0; i < this.length; i++){
+      const firework = fireworks[i];
+
+      firework.update();
+    }
+  }
+
   const firework = new Firework({x:0 , Y: 0});
 
   scene.add(firework.points);
 
-
+  fireworks.push(firework);
 
   render();
 
   function render() {
-    firework.update();
+    fireworks.update();
 
     renderer.render(scene, camera);
 
@@ -94,4 +105,17 @@ function init() {
   }
 
   window.addEventListener('resize', handleResize);
+
+  function handleMouseDown() {
+    const firework = new Firework({
+      x : THREE.MathUtils.randFloatSpread(8000),
+      y : THREE.MathUtils.randFloatSpread(8000)
+    });
+
+    scene.add(firework.points);
+
+    fireworks.push(firework);
+  }
+
+  window.addEventListener('mousedown', handleMouseDown);
 }
