@@ -27,6 +27,7 @@ function init() {
   const count = 10000;
 
   const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
 
   for (let i = 0 ; i < count ; i++){
     // positions[i * 3] = Math.random() - 0.5;
@@ -36,14 +37,20 @@ function init() {
     positions[i * 3] = THREE.MathUtils.randFloatSpread(10);
     positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(10);
     positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(10);
+
+    colors[i * 3] = Math.random();
+    colors[i * 3 + 1] = Math.random();
+    colors[i * 3 + 2] = Math.random();
   }
 
   // 3 부분은 3개의 정보가 모여서 점하나의 정보를 담고있다고 알려주는 것
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
   const material = new THREE.PointsMaterial({
     color: 0xccaaff,
     size: 0.1,
+    vertexColors: true,
     // sizeAttenuation: false,
   });
 
@@ -51,6 +58,7 @@ function init() {
 
   const texture = textureLoader.load('./assets/textures/particle.png');
 
+  //넣어준 particle의 이미지가 배경까지 부자연스럽게 보여줘 해결해주는 속성값들
   material.alphaMap = texture;
   material.transparent = true;
   material.depthWrite = false;
