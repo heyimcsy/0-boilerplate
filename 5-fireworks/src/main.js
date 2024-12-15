@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import Firework from './Firework.js';
 
 window.addEventListener('load', function () {
@@ -21,7 +21,7 @@ function init() {
 
   camera.position.z = 8000;
 
-  new OrbitControls(camera, renderer.domElement);
+  // new OrbitControls(camera, renderer.domElement);
 
   // const geometry = new THREE.BufferGeometry();
   //
