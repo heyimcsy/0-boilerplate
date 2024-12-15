@@ -22,12 +22,30 @@ function init() {
 
   new OrbitControls(camera, renderer.domElement);
 
-  const geometry = new THREE.SphereGeometry();
+  const geometry = new THREE.BufferGeometry();
+
+  const count = 10000;
+
+  const positions = new Float32Array(count * 3);
+
+  for (let i = 0 ; i < count ; i++){
+    // positions[i * 3] = Math.random() - 0.5;
+    // positions[i * 3 + 1] = Math.random() - 0.5;
+    // positions[i * 3 + 2] = Math.random() - 0.5;
+    //해당 Math.random() 함수처럼 사용할 수 있는 내장함수 randomFloatSpread 함수
+    positions[i * 3] = THREE.MathUtils.randFloatSpread(10);
+    positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(10);
+    positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(10);
+  }
+
+  // 3 부분은 3개의 정보가 모여서 점하나의 정보를 담고있다고 알려주는 것
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
   const material = new THREE.PointsMaterial({
     color: 0xccaaff,
     size: 0.01,
     // sizeAttenuation: false,
-  })
+  });
 
   const points = new THREE.Points(geometry, material);
 
