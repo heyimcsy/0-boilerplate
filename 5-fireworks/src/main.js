@@ -43,9 +43,17 @@ function init() {
 
   const material = new THREE.PointsMaterial({
     color: 0xccaaff,
-    size: 0.01,
+    size: 0.1,
     // sizeAttenuation: false,
   });
+
+  const textureLoader = new THREE.TextureLoader();
+
+  const texture = textureLoader.load('./assets/textures/particle.png');
+
+  material.alphaMap = texture;
+  material.transparent = true;
+  material.depthWrite = false;
 
   const points = new THREE.Points(geometry, material);
 
