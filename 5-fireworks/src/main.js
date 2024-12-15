@@ -17,9 +17,9 @@ function init() {
 
   const scene = new THREE.Scene();
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 
-  camera.position.z = 5;
+  camera.position.z = 8000;
 
   new OrbitControls(camera, renderer.domElement);
 
@@ -77,6 +77,8 @@ function init() {
   render();
 
   function render() {
+    firework.update();
+
     renderer.render(scene, camera);
 
     requestAnimationFrame(render);
