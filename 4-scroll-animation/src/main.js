@@ -8,28 +8,31 @@ window.addEventListener('load', function () {
   init();
 });
 
- async  function init() {
+async  function init() {
    gsap.registerPlugin(ScrollTrigger);
 
    const params = {
-     waveColor: '#00ffff'
-   }
-  const gui = new GUI()
-  const canvas = document.querySelector('#canvas');
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true,
-    canvas ,
-  });
+     waveColor: '#00ffff',
+     backgroundColor: '#FFFFFF',
+     fogColor: '#f0f0f0'
+   };
+   const gui = new GUI();
+   gui.hide();
+   const canvas = document.querySelector('#canvas');
+   const renderer = new THREE.WebGLRenderer({
+     antialias: true,
+     alpha: true,
+     canvas ,
+   });
 
-  renderer.shadowMap.enabled = true;
+   renderer.shadowMap.enabled = true;
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+   renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-  const scene = new THREE.Scene();
+   const scene = new THREE.Scene();
 
-  scene.fog = new THREE.Fog('0xf0f0f0', 0.1, 500);
+   scene.fog = new THREE.Fog('0xf0f0f0', 0.1, 500);
   // scene.fog = new THREE.FogExp2(0xf0f0f0, 0.005);
 
   // gui.add(scene.fog, 'near')
@@ -106,7 +109,7 @@ window.addEventListener('load', function () {
 
   scene.add(ship);
 
-  const pointLight = new THREE.PointLight(0xffffff, 3000);
+  const pointLight = new THREE.PointLight(0xffffff, 200);
 
   pointLight.castShadow = true;
   pointLight.shadow.mapSize.width = 1024;
@@ -116,47 +119,92 @@ window.addEventListener('load', function () {
 
   scene.add(pointLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 
    directionalLight.castShadow = true;
    directionalLight.shadow.mapSize.width = 1024;
    directionalLight.shadow.mapSize.height = 1024;
    directionalLight.shadow.radius = 10;
-  directionalLight.position.set(-15, 15, 15);
+   directionalLight.position.set(-15, 15, 15);
 
-  scene.add(directionalLight);
+   scene.add(directionalLight);
 
-  const clock = new THREE.Clock();
+   const clock = new THREE.Clock();
 
-  render();
+   render();
 
-  function render() {
-    wave.update();
-    ship.update();
+   function render() {
+     wave.update();
+     ship.update();
 
-    camera.lookAt(ship.position);
+     camera.lookAt(ship.position);
 
-    renderer.render(scene, camera);
+     renderer.render(scene, camera);
 
-    requestAnimationFrame(render);
-  }
-  function handleResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+     requestAnimationFrame(render);
+   }
+   function handleResize() {
 
-    camera.updateProjectionMatrix();
+     camera.aspect = window.innerWidth / window.innerHeight;
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+     camera.updateProjectionMatrix();
 
-    renderer.render(scene, camera);
-  }
+     renderer.setSize(window.innerWidth, window.innerHeight);
 
-  window.addEventListener('resize', handleResize);
+     renderer.render(scene, camera);
+   }
 
-  gsap.to(params, {
-    waveColor:'#4268ff',
-    onUpdate: () => {
-      waveMaterial.color = new THREE.Color(params.waveColor);
+   window.addEventListener('resize', handleResize);
+
+  // gsap.to(params, {
+  //   waveColor:'#4268ff',
+  //   onUpdate: () => {
+  //     waveMaterial.color = new THREE.Color(params.waveColor);
+  //   },
+  //   scrollTrigger: {
+  //     trigger: '.wrapper',
+  //     start:'top top',
+  //     markers: true,
+  //     scrub: true,
+  //   }
+  // });
+  // gsap.to(params, {
+  //   backgroundColor: '#333b48',
+  //   onUpdate: () => {
+  //     scene.background = new THREE.Color(params.backgroundColor);
+  //   },
+  //   scrollTrigger: {
+  //     trigger: '.wrapper',
+  //     start:'top top',
+  //     markers: true,
+  //     scrub: true,
+  //   }
+  // });
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.wrapper',
+      start:'top top',
+      markers: true,
+      scrub: true,
     }
   });
-
+  tl
+    .to(params, {
+      waveColor:'#4268ff',
+      onUpdate: () => {
+        waveMaterial.color = new THREE.Color(params.waveColor);
+      }
+    })
+    .to(params, {
+      backgroundColor: '#333b48',
+      onUpdate: () => {
+        scene.background = new THREE.Color(params.backgroundColor);
+      }
+    }, '<')
+    .to(params, {
+      fogColors: '#2f2f2f',
+      onUpdate: () => {
+        scene.fog.color = new THREE.Color(params.fogColor);
+      }
+    }, '<')
 }
