@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 window.addEventListener('load', function () {
   init();
@@ -19,7 +20,22 @@ function init() {
 
   camera.position.z = 5;
 
+  new OrbitControls(camera, renderer.domElement);
+
+  const geometry = new THREE.BoxGeometry(3, 3,3);
+  const material = new THREE.MeshPhongMaterial({
+    color: 0xaaccee,
+    side:  THREE.BackSide,
+  });
+
+  const skybox = new THREE.Mesh(geometry, material);
+  scene.add(skybox);
+
   render();
+
+  const pointLight = new THREE.PointLight(0xffffff, 2);
+
+  scene.add(pointLight);
 
   function render() {
     renderer.render(scene, camera);
