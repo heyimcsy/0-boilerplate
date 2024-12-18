@@ -44,7 +44,8 @@ async function init() {
 
   loadingManager.onLoad = () => {
     progressBarContainer.style.display = 'none';
-  }
+  };
+
   const gltfLoader = new GLTFLoader(loadingManager);
 
    // 모델을 불러오는 시간이 걸려서 흰 화면이 보여지고 있다.
@@ -53,7 +54,6 @@ async function init() {
   const model = gltf.scene;
 
   model.scale.set(0.1 ,0.1 ,0.1 );
-
   model.traverse(object => {
     if(object.isMesh){
       object.castShadow = true;
@@ -95,12 +95,36 @@ async function init() {
 
   const mixer = new THREE.AnimationMixer(model);
 
+  const buttons = document.querySelector('.actions');
+
+  let currentAction;
+
+  const combatAnimations = gltf.animations.slice(0, 5);
+
+  combatAnimations.forEach(animation => {
+    const button = document.createElement('button')
+
+    button.innerText = animation.name;
+    buttons.appendChild(button);
+    button.addEventListener('click', () => {
+      const previousAction = currentAction;
+
+      currentAction = mixer.clipAction(animation);
+
+      if(previousAction !== currentAction){
+        previousAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      }
+    })
+  })
+
+
   const hasAnimation = gltf.animations.length !== 0;
 
   if(hasAnimation){
-    const action = mixer.clipAction(gltf.animations[0]);
+    currentAction = mixer.clipAction(gltf.animations[0]);
 
-    action.play();
+    currentAction.play();
   }
 
   const clock = new THREE.Clock();
