@@ -1,11 +1,14 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import { GUI } from 'lil-gui';
 
 window.addEventListener('load', function () {
   init();
 });
 
 function init() {
+  const gui = new GUI();
+
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
@@ -18,7 +21,7 @@ function init() {
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 
-  camera.position.z = 5;
+  camera.position.z = 100;
 
   /** 큐브맵 텍스처를 이용한 3차원 공간 표현 */
   // const controls = new OrbitControls(camera, renderer.domElement);
@@ -81,9 +84,40 @@ function init() {
 
   const texture =  textureLoader.load('assets/textures/village.jpeg');
 
+  // EquirectangularReflectionMapping  EquirectangularRefractionMapping 두가지가 있ㄷ다
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+
   scene.background = texture;
 
-  texture.mapping = THREE.EquirectangularReflectionMapping;
+  const sphereGeometry = new THREE.SphereGeometry(30);
+  const sphereMaterial = new THREE.MeshBasicMaterial({
+    envMap: texture,
+  });
+
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+  scene.add(sphere);
+
+  gui
+    .add(texture, 'mapping', {
+      Reflection: THREE.EquirectangularReflectionMapping,
+      Refraction: THREE.EquirectangularRefractionMapping
+    })
+    .onChange(() => {
+      sphereMaterial.needsUpdate = true;
+    })
+
+  gui
+    .add(sphereMaterial, 'refractionRatio')
+    .min(0)
+    .max(1)
+    .step(0.01);
+
+  gui
+    .add(sphereMaterial, 'reflectivity')
+    .min(0)
+    .max(1)
+    .step(0.01);
 
   render();
 
