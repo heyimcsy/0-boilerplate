@@ -21,11 +21,23 @@ async function init() {
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
 
-  camera.position.z = 50;
   camera.position.set(0,5,20);
 
-  const gltfLoader = new GLTFLoader();
+  const progressBar = document.querySelector('#progress-bar');
+  const progressBarContainer = document.querySelector('#progress-bar-container')
 
+  const loadingManager = new THREE.LoadingManager();
+
+  loadingManager.onProgress = (url, loaded, total) => {
+    progressBar.value = (loaded / total) * 100;
+  };
+
+  loadingManager.onLoad = () => {
+    progressBarContainer.style.display = 'none';
+  }
+  const gltfLoader = new GLTFLoader(loadingManager);
+
+   // 모델을 불러오는 시간이 걸려서 흰 화면이 보여지고 있다.
   const gltf = await gltfLoader.loadAsync('models/character.gltf');
 
   const model = gltf.scene;
