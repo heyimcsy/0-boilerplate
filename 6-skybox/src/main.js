@@ -54,23 +54,43 @@ function init() {
 
   /** 큐브맵 텍스처를 이용한 3차원 공간 표현2 */
 
-  const cubeTextureLoader = new THREE.CubeTextureLoader().setPath('assets/textures/Yokohama/');
+  // const cubeTextureLoader = new THREE.CubeTextureLoader().setPath('assets/textures/Yokohama/');
+  //
+  // const images = [
+  //   'posx.jpg', 'negx.jpg',
+  //   'posy.jpg', 'negy.jpg',
+  //   'posz.jpg', 'negz.jpg',
+  // ];
+  //
+  // const cubeTexture = cubeTextureLoader.load(images);
+  //
+  // scene.background = cubeTexture;
+  //
+  // new OrbitControls(camera, renderer.domElement);
 
-  const images = [
-    'posx.jpg', 'negx.jpg',
-    'posy.jpg', 'negy.jpg',
-    'posz.jpg', 'negz.jpg',
-  ];
+  /** 360 파노라마 텍스처를 이용한 3차원 공간 표현 */
 
-  const cubeTexture = cubeTextureLoader.load(images);
+  const controls = new OrbitControls(camera, renderer.domElement);
 
-  scene.background = cubeTexture;
+  controls.enableZoom = false;
+  controls.enableDamping = true;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
 
-  new OrbitControls(camera, renderer.domElement);
+  const textureLoader = new THREE.TextureLoader();
+
+  const texture =  textureLoader.load('assets/textures/village.jpeg');
+
+  scene.background = texture;
+
+  texture.mapping = THREE.EquirectangularReflectionMapping;
 
   render();
 
   function render() {
+
+    controls.update();
+
     renderer.render(scene, camera);
 
     requestAnimationFrame(render);
