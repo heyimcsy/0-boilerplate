@@ -100,6 +100,7 @@ async function init() {
   let currentAction;
 
   const combatAnimations = gltf.animations.slice(0, 5);
+  const dancingAnimations = gltf.animations.slice(5);
 
   combatAnimations.forEach(animation => {
     const button = document.createElement('button')
@@ -168,9 +169,31 @@ async function init() {
 
     const object = intersects[0]?.object;
 
-    console.log(object)
     if(object?.name === 'Ch46'){
-      object.material.color.set(0x00aacc);
+      const previousAction = currentAction;
+
+      const index = Math.round(Math.random() * (dancingAnimations.length - 1));
+
+      currentAction = mixer.clipAction(dancingAnimations[index]);
+      // THREE.LoopRepeat, THREE.LoopOnce
+      currentAction.loop = THREE.LoopOnce;
+      currentAction.clampWhenFinished = true;
+
+      if(previousAction !== currentAction){
+        previousAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      }
+
+      mixer.addEventListener('finished', handleFinished);
+
+      function handleFinished() {
+        const previousAction = currentAction;
+
+        currentAction = mixer.clipAction(combatAnimations[0]);
+
+        previousAction.fadeOut(0.5);
+        currentAction.reset().fadeIn(0.5).play();
+      }
     }
   }
 
